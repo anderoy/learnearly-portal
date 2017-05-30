@@ -1,0 +1,26 @@
+{
+  "name": "e3_tracker",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.18.0",
+    "bcrypt": "^0.8.7",
+    "meteor-node-stubs": "~0.2.0",
+    "moment": "^2.14.1",
+    "pikaday-time": "^1.4.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.3.1"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {
+        "browsers": [
+          "last 2 versions"
+        ]
+      }
+    }
+  }
+}

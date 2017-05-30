@@ -1,0 +1,29 @@
+<template name="users">
+  {{#if isInRole 'admin'}}
+      <h3>Manage Users
+        {{> addUser_button}}
+      </h3>
+      <hr />
+      {{> tabular table=TabularTables.Users class="table table-striped table-hover"}}
+  {{else}}
+    <h1>Not Authorized</h1>
+  {{/if}}
+</template>
+
+<template name="addUser_button">
+  <!-- Button trigger modal -->
+  {{#if currentUser}}
+  <button type="button" class="btn btn-primary pull-right add-new" data-toggle="modal" data-target="#addUser_form">
+    <i class="fa fa-user-plus"></i> Add New User
+  </button>
+  {{/if}}
+</template>
+
+<template name="editUserButton">
+  <a href="/user/edit/{{_id}}" class="btn btn-primary js-edit-user"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+  {{#if isAdmin}}
+  <button class="toggle-admin">Remove Admin</button>
+    {{else}}
+  <button class="toggle-admin">Make Admin</button>
+  {{/if}}
+</template>

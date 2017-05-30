@@ -1,0 +1,50 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="print.css" media="print" type="text/css">
+  <title>E3 Tracker</title>
+</head>
+
+<body>
+ 
+</body>
+
+<template name="ApplicationLayout">
+  {{> yield region="nav"}}
+  <div class="container-fluid">
+    <div class="side-body">
+      {{> yield region="actions"}}
+      {{> yield}}
+    </div>
+    <!-- Add the forms outside of the nav tags so the form renders properly in the body -->
+    {{> addTeacher_form}}
+    {{> addClasslog_form}}
+    {{> addSchool_form}}
+  </div>
+  {{> yield region="footer"}} 
+</template>
+
+<template name="footer">
+  <div id="footer">
+    <div class="container">
+      <hr>
+        <p>
+          Boilerplate Footer content :-)
+        </p>
+    </div>
+  </div>
+</template>
+
+<template name="welcome">
+  <div class="center-block">
+    <img src="/images/e3logo_full.png" class="img-responsive">
+    <h2 class="">
+    Welcome to the new E3 Coaching Tracker!
+    </h2>
+  </div>
+</template>
+
+<template name="pageNotFound">
+  <h3>404 - Houston, we have a problem!!!</h3>
+  <h5>The page you're looking for was not found.</h5>
+</template>

@@ -1,0 +1,346 @@
+<template name="addClasslog_button">
+  <!-- Button trigger modal -->
+  {{#if currentUser}}
+  <button type="button" class="btn btn-primary pull-right add-new js-add-classlog">
+    Add New CLASS
+  </button>
+  {{/if}}
+</template>
+
+<!-- This template is the short modal insert form for a CLASS log -->
+<template name="addClasslog_form">
+  <!-- Modal -->
+  <div class="modal fade" id="addClasslog_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add CLASS Assessment</h4>
+        </div>
+        {{#autoForm collection="Classlogs" id="insertClasslogForm" type="method" meteormethod="addClasslog"}}
+        <div class="modal-body">
+          <fieldset>
+            {{> afQuickField name="createdAt" type="hidden"}}
+            {{> afQuickField name="teacher._id" label="Teacher" options=myTeachers}}
+            {{> afQuickField name="observer._id" label="Observer" options=coachList}}
+            {{> afQuickField name="rubric" options="allowed"}}
+            {{> afQuickField name="starttime" type="datetimepicker"}}
+            {{> afQuickField name="endtime" type="datetimepicker"}}
+            {{> afQuickField name="adults"}}
+            {{> afQuickField name="children"}}
+            {{> afQuickField name="content" options="allowed" noselect=true}}
+            {{#if afFieldValueContains name="content" value="other"}}
+              {{> afQuickField name="contentoth"}}
+            {{/if}}
+            {{> afQuickField name="format" options="allowed" noselect=true}}
+            {{#if afFieldValueContains name="format" value="other"}}
+              {{> afQuickField name="formatoth"}}
+            {{/if}}            
+          </fieldset>
+        </div> <!-- ./.modal-body -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div> <!-- ./.modal-footer -->
+        {{/autoForm}}
+      </div> <!-- ./.modal-content -->
+    </div> <!-- ./.modal-dialog -->
+  </div> <!-- ./.modal -->
+</template>
+
+<!-- This template is the full page full edit form for a CLASS log -->
+<template name="editClasslog_form">
+  <h3>Edit CLASS Assessment</h3>
+  <hr />
+  {{#autoForm collection="Classlogs" id="updateClasslogForm" doc=this type="method-update" meteormethod="editClasslog"}}
+    <fieldset>
+      {{> afQuickField name="createdAt" type="hidden"}}
+      <div class="row">
+        <div class="col-xs-6 formleft"><p><strong>Teacher: </strong>{{teacher.firstname}} {{teacher.lastname}}</p>{{> afQuickField name="teacher._id" type="hidden"}}</div>
+        <div class="col-xs-6 formright"><p><strong>Observer: </strong>{{observer.firstname}} {{observer.lastname}}</p>{{> afQuickField name="observer._id" type="hidden"}}</div>
+      </div>      
+      <div class="row">
+        <div class="col-xs-6 formleft"><p><strong>Start: </strong>{{formatDateTime starttime}}{{> afQuickField name="starttime" type="hidden"}}</p></div>
+        <div class="col-xs-6 formright"><p><strong>End: </strong>{{formatDateTime endtime}}{{> afQuickField name="endtime" type="hidden"}}</p></div>
+      </div>
+      <p><strong>CLASS Rubric: </strong>{{rubric}}</p>
+      {{> afQuickField name="rubric" options="allowed" type="hidden"}}
+      <hr />
+      <div class="row">
+        <div class="col-xs-6 formleft">{{> afQuickField name="adults"}}</div>
+        <div class="col-xs-6 formright">{{> afQuickField name="children"}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 formleft">
+          {{> afQuickField name="content" options="allowed" noselect=true}}
+          {{#if afFieldValueContains name="content" value="other"}}
+            {{> afQuickField name="contentoth"}}
+          {{/if}}
+        </div>
+        <div class="col-xs-6 formright">
+          {{> afQuickField name="format" options="allowed" noselect=true}}
+          {{#if afFieldValueContains name="format" value="other"}}
+            {{> afQuickField name="formatoth"}}
+          {{/if}}
+        </div>
+      </div>
+      <h4>{{rubric}} Assessment Dimensions</h4>
+      <div class="row">
+        <div class="col-sm-6 formleft"></div>
+        <div class="col-sm-6 formright"></div>
+      </div>
+      <!-- Infant Assessment fields -->
+      {{#if afFieldValueIs name="rubric" value="Infant"}}
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Relational Climate</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.0.name" value="Relational Climate" type="hidden"}}
+              {{> afQuickField name="dimensions.0.score"}}
+              {{> afQuickField name="dimensions.0.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Teacher Sensitivity</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.1.name" value="Teacher Sensitivity" type="hidden"}}
+              {{> afQuickField name="dimensions.1.score"}}
+              {{> afQuickField name="dimensions.1.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Facilitated Exploration</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.2.name" value="Facilitated Exploration" type="hidden"}}
+              {{> afQuickField name="dimensions.2.score"}}
+              {{> afQuickField name="dimensions.2.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Early Language Support</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.3.name" value="Early Language Support" type="hidden"}}
+              {{> afQuickField name="dimensions.3.score"}}
+              {{> afQuickField name="dimensions.3.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+      <!-- Toddler Assessment fields -->
+      {{#if afFieldValueIs name="rubric" value="Toddler"}}
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Positive Climate</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.0.name" value="Positive Climate" type="hidden"}}
+              {{> afQuickField name="dimensions.0.score"}}
+              {{> afQuickField name="dimensions.0.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Negative Climate</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.1.name" value="Negative Climate" type="hidden"}}
+              {{> afQuickField name="dimensions.1.score"}}
+              {{> afQuickField name="dimensions.1.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Teacher Sensitivity</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.2.name" value="Teacher Sensitivity" type="hidden"}}
+              {{> afQuickField name="dimensions.2.score"}}
+              {{> afQuickField name="dimensions.2.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Regard for Child Perspectives</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.3.name" value="Regard for Child Perspectives" type="hidden"}}
+              {{> afQuickField name="dimensions.3.score"}}
+              {{> afQuickField name="dimensions.3.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Behavior Guidance</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.4.name" value="Behavior Guidance" type="hidden"}}
+              {{> afQuickField name="dimensions.4.score"}}
+              {{> afQuickField name="dimensions.4.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Facilitation of Learning and Development</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.5.name" value="Facilitation of Learning and Development" type="hidden"}}
+              {{> afQuickField name="dimensions.5.score"}}
+              {{> afQuickField name="dimensions.5.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Quality of Feedback</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.6.name" value="Quality of Feedback" type="hidden"}}
+              {{> afQuickField name="dimensions.6.score"}}
+              {{> afQuickField name="dimensions.6.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Language Modeling</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.7.name" value="Language Modeling" type="hidden"}}
+              {{> afQuickField name="dimensions.7.score"}}
+              {{> afQuickField name="dimensions.7.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+      <!-- Pre-K-3 Assessment fields -->
+      {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Positive Climate</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.0.name" value="Positive Climate" type="hidden"}}
+              {{> afQuickField name="dimensions.0.score"}}
+              {{> afQuickField name="dimensions.0.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Negative Climate</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.1.name" value="Negative Climate" type="hidden"}}
+              {{> afQuickField name="dimensions.1.score"}}
+              {{> afQuickField name="dimensions.1.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Teacher Sensitivity</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.2.name" value="Teacher Sensitivity" type="hidden"}}
+              {{> afQuickField name="dimensions.2.score"}}
+              {{> afQuickField name="dimensions.2.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Regard for Student Perspectives</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.3.name" value="Regard for Student Perspectives" type="hidden"}}
+              {{> afQuickField name="dimensions.3.score"}}
+              {{> afQuickField name="dimensions.3.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Behavior Management</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.4.name" value="Behavior Management" type="hidden"}}
+              {{> afQuickField name="dimensions.4.score"}}
+              {{> afQuickField name="dimensions.4.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Productivity</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.5.name" value="Productivity" type="hidden"}}
+              {{> afQuickField name="dimensions.5.score"}}
+              {{> afQuickField name="dimensions.5.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Instructional Learning Formats</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.6.name" value="Instructional Learning Formats" type="hidden"}}
+              {{> afQuickField name="dimensions.6.score"}}
+              {{> afQuickField name="dimensions.6.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Concept Development</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.7.name" value="Concept Development" type="hidden"}}
+              {{> afQuickField name="dimensions.7.score"}}
+              {{> afQuickField name="dimensions.7.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 formleft">
+          <div class="panel panel-default">
+            <div class="panel-heading">Quality of Feedback</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.8.name" value="Quality of Feedback" type="hidden"}}
+              {{> afQuickField name="dimensions.8.score"}}
+              {{> afQuickField name="dimensions.8.evidence"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 formright">
+          <div class="panel panel-default">
+            <div class="panel-heading">Language Modeling</div>
+            <div class="panel-body">
+              {{> afQuickField name="dimensions.9.name" value="Language Modeling" type="hidden"}}
+              {{> afQuickField name="dimensions.9.score"}}
+              {{> afQuickField name="dimensions.9.evidence"}}
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </fieldset>
+    <button type="submit" class="btn btn-primary js-close-edit">Save</button>
+  {{/autoForm}}
+</template>

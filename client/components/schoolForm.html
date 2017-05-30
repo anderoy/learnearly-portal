@@ -1,0 +1,74 @@
+<template name="addSchool_button">
+  <!-- Button trigger modal -->
+  {{#if currentUser}}
+  <button type="button" class="btn btn-primary pull-right add-new js-add-school">
+    Add New School
+  </button>
+  {{/if}}
+</template>
+
+<!-- This template is the short modal insert form for a CLASS log -->
+<template name="addSchool_form">
+  <!-- Modal -->
+  <div class="modal fade" id="addSchool_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add School</h4>
+        </div>
+        {{#autoForm collection="Schools" id="insertSchoolForm" type="method" meteormethod="addSchool"}}
+        <div class="modal-body">
+          <fieldset>
+            {{> afQuickField name="createdAt" type="hidden"}}
+            {{> afQuickField name="name"}}
+            {{> afQuickField name="esdId"}}
+            {{> afQuickField name="ages" options="allowed" noselect=true}}            
+          </fieldset>
+        </div> <!-- ./.modal-body -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div> <!-- ./.modal-footer -->
+        {{/autoForm}}
+      </div> <!-- ./.modal-content -->
+    </div> <!-- ./.modal-dialog -->
+  </div> <!-- ./.modal -->
+</template>
+
+<!-- This template is the full page full edit form for a CLASS log -->
+<template name="editSchool_form">
+  <h3>Edit School</h3>
+  <hr />
+  {{#autoForm collection="Classlogs" id="updateClasslogForm" doc=this type="method-update" meteormethod="editClasslog"}}
+    <fieldset>
+      {{> afQuickField name="createdAt" type="hidden"}}
+      {{> afQuickField name="teacher._id" label="Teacher" options=myTeachers}}
+      {{> afQuickField name="observer._id" label="Observer" options=coachList}}
+      {{> afQuickField name="rubric" options="allowed"}}
+      <div class="row">
+        <div class="col-xs-6 formleft">{{> afQuickField name="starttime" type="bootstrap-datetimepicker"}}</div>
+        <div class="col-xs-6 formright">{{> afQuickField name="endtime" type="bootstrap-datetimepicker"}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 formleft">{{> afQuickField name="adults"}}</div>
+        <div class="col-xs-6 formright">{{> afQuickField name="children"}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 formleft">
+          {{> afQuickField name="content" options="allowed" noselect=true}}
+          {{#if afFieldValueContains name="content" value="other"}}
+            {{> afQuickField name="contentoth"}}
+          {{/if}}
+        </div>
+        <div class="col-xs-6 formright">
+          {{> afQuickField name="format" options="allowed" noselect=true}}
+          {{#if afFieldValueContains name="format" value="other"}}
+            {{> afQuickField name="formatoth"}}
+          {{/if}}
+        </div>
+      </div>
+    </fieldset>
+    <button type="submit" class="btn btn-primary">Save</button>
+  {{/autoForm}}
+</template>

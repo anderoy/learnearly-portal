@@ -1,0 +1,11 @@
+/* Main body section */
+@media print {
+.side-body {
+  margin-left: 5px !important;
+  margin-top: 70px;
+  position: relative;
+}
+.side-menu {
+  display: none;
+}
+}

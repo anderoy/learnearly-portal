@@ -1,0 +1,1267 @@
+<!-- This template is the Session log information template for the teacher view-->
+<template name="sessionlogList">
+  <h4>
+    Coaching Session Log
+    <span class="pull-right"><a class="btn btn-sm btn-info add-new js-add-session" href="/sessionlog/add">Add Session Log</a></span>
+  </h4>
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  {{#each session}}
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="SessionLogHeader">
+        <h4 class="panel-title">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href={{makehref _id}} aria-expanded="true" aria-controls="Collapse">
+            {{formatShortDateTime starttime}} &ndash; {{formatEndTime endtime}}
+            <span class="pull-right">{{dimension}}</span>
+          </a>
+        </h4>
+      </div>
+      <div id={{_id}} class="panel-collapse collapse" role="tabpanel" aria-labelledby="SessionLogInfo">
+        <div class="panel-body">
+          <div class="row">
+            <div class="text-right">
+              <a class="btn" href="/sessionlog/edit/{{_id}}"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+            </div>
+            <div class="col-md-7 formleft"><p><strong>What I saw</strong></p><p>{{observation}}</p></div>
+            <div class="col-md-5 formright">
+              {{#each indicators}}
+                <p><strong>{{name}}: </strong>{{score}}</p>
+              {{/each}}
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-md-7 formleft"><p><strong>What I did</strong></p><p>{{activities}}</p></div>
+            <div class="col-md-5 formright">
+              {{#each strategies}}
+                <p><strong>{{name}}: </strong>{{time}} min.</p>
+              {{/each}}
+            </div>
+          </div>
+          <hr />
+          <p><strong>Next Steps:</strong></p>
+          <p>{{nextsteps}}</p>
+          
+        </div>
+      </div>
+    </div>
+  {{/each}}
+  </div>
+</template>
+
+
+<!-- This template is the full page full add form for a Session log -->
+<template name="addSessionlog_form">
+  <h3>Add Session Log</h3>
+  <hr />
+  {{#autoForm collection="Sessionlogs" id="insertSessionlogForm" type="method" meteormethod="addSessionlog"}}
+    <fieldset>
+      {{> afQuickField name="teacher._id" label="Teacher" options=myTeachers value=defaultTeach}}
+      {{> afQuickField name="rubric" options="allowed" type="hidden"}}
+      <div class="row">
+        <div class="col-xs-6 formleft">{{> afQuickField name="starttime" type="datetimepicker"}}</div>
+        <div class="col-xs-6 formright">{{> afQuickField name="endtime" type="datetimepicker"}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 formleft">{{> afQuickField name="rubric" options="allowed"}}</div>
+        <div class="col-xs-6 formright">{{> afQuickField name="dimension" options="allowed"}}</div>
+      </div>
+      <h4>{{rubric}} Assessment Dimensions</h4>
+      <div class="row">
+        <div class="col-sm-6 formleft"></div>
+        <div class="col-sm-6 formright"></div>
+      </div>
+      
+      <div>
+        <label>What I Saw</label>
+        <div class="small">
+          <p>Strive to include:</p>
+          <ul>
+            <li>the learning objective for the activity/ies being observed</li>
+            <li>observed child actions/demonstrations that provide evidence of engagement and learning</li>
+            <li>observed teacher actions (or inactions) that influenced observed child actions</li>
+            <li>a key lever you select based on these observations</li>
+          </ul>
+        </div>
+        {{> afQuickField name="observation" label=false}}
+      </div>
+      
+
+      <!-- Indicator fields with a lot of if statements -->
+
+      {{#if afFieldValueIs name="dimension" value="Relational Climate"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Relational Climate</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Relational behaviors" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Relational behaviors"}}
+            {{> afQuickField name="indicators.1.name" value="Emotion expression" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Emotion expression"}}
+            {{> afQuickField name="indicators.2.name" value="Respect for Infants' state" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Respect for Infants' state"}}
+            {{> afQuickField name="indicators.3.name" value="Lack of adult negativity" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Lack of adult negativity"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Relational Climate is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Relational Climate is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Facilitated Exploration"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Facilitated Exploration</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Involvement" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Involvement"}}
+            {{> afQuickField name="indicators.1.name" value="Infant focused" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Infant focused"}}
+            {{> afQuickField name="indicators.2.name" value="Expansion of infants' experience" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Expansion of infants' experience"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Facilitated Exploration is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Facilitated Exploration is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Early Language Support"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Early Language Support</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Teacher talk" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Teacher talk"}}
+            {{> afQuickField name="indicators.1.name" value="Communication support" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Communication support"}}
+            {{> afQuickField name="indicators.2.name" value="Communication extension" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Communication extension"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Early Language Support is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Early Language Support is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Positive Climate"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Positive Climate is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Indicator Scoring for <strong>Positive climate</strong> / <strong>Toddler</strong></div>
+            <div class="panel-body">
+              {{> afQuickField name="indicators.0.name" value="Relationships" type="hidden"}}
+              {{> afQuickField name="indicators.0.score" options="allowed" label="Relationships"}}
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Collapsible Group Item #1
+              </a>
+              <div id="collapseOne" class="collapse" role="infotable" aria-labelledby="headingOne">
+                <table class="table table-responsive">
+                  <thead>
+                    <tr>
+                      <th>Relationships</th>
+                      <th>Low (1,2)</th>
+                      <th>Middle (3,4,5)</th>
+                      <th>High (6,7)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <ul>
+                          <li>Physical proximity</li>
+                          <li>Matched positive affect</li>
+                          <li>Reciprocal interaction</li>
+                          <li>Peer connections</li>
+                        </ul>
+                      </td>
+                      <td>The teacher and children appear distant from and uninterested in one another.</td>
+                      <td>The teacher and some children appear generally interested in one another, but these interactions are not representative of the majority of the children in the classroom. There may be limited peer awareness and interaction.</td>
+                      <td>There are many indications that the teacher and children enjoy warm relationships with one another.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <hr />
+              {{> afQuickField name="indicators.1.name" value="Positive affect" type="hidden"}}
+              {{> afQuickField name="indicators.1.score" options="allowed" label="Positive affect"}}
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Collapsible Group Item #2
+              </a>
+              <div id="collapseTwo" class="collapse" role="infotable" aria-labelledby="headingTwo">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Positive affect</th>
+                      <th>Low (1,2)</th>
+                      <th>Middle (3,4,5)</th>
+                      <th>High (6,7)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <ul>
+                          <li>Smiling, laughter</li>
+                          <li>Enthusiasm</li>
+                          <li>Verbal or physical affection</li>
+                        </ul>
+                      </td>
+                      <td>The teacher and children display flat affect and do not appear to enjoy their time in the classroom.</td>
+                      <td>The teacher and children demonstrate some indications of genuine positive affect; however, these displays may be brief or not characteristic of the majority of the classroom.</td>
+                      <td>There are frequent episodes of smiling and laughter by the teacher and children. On multiple occasions or consistently, the teacher and children show enthusiasm and affection with one another.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <hr />
+              {{> afQuickField name="indicators.2.name" value="Respect" type="hidden"}}
+              {{> afQuickField name="indicators.2.score" options="allowed" label="Respect"}}
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Collapsible Group Item #3
+              </a>
+              <div id="collapseThree" class="collapse" role="infotable" aria-labelledby="headingThree">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Respect</th>
+                      <th>Low (1,2)</th>
+                      <th>Middle (3,4,5)</th>
+                      <th>High (6,7)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <ul>
+                          <li>Warm, calm voice</li>
+                          <li>Respectful language and communication</li>
+                          <li>Eye contact</li>
+                          <li>Body orientation</li>
+                        </ul>
+                      </td>
+                      <td>The teacher rarely, if ever, demonstrates respect for the children.</td>
+                      <td>The teacher sometimes demonstrates respect for the children.</td>
+                      <td>The teacher consistently demonstrates respect for the children</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Indicator Scoring for <strong>Positive climate</strong> / <strong>Pre-K-3</strong></div>
+            <div class="panel-body">
+              {{> afQuickField name="indicators.0.name" value="Relationships" type="hidden"}}
+              {{> afQuickField name="indicators.0.score" options="allowed" label="Relationships"}}
+              {{> afQuickField name="indicators.1.name" value="Positive Affect" type="hidden"}}
+              {{> afQuickField name="indicators.1.score" options="allowed" label="Positive Affect"}}
+              {{> afQuickField name="indicators.2.name" value="Positive Communication" type="hidden"}}
+              {{> afQuickField name="indicators.2.score" options="allowed" label="Positive Communication"}}
+              {{> afQuickField name="indicators.3.name" value="Respect" type="hidden"}}
+              {{> afQuickField name="indicators.3.score" options="allowed" label="Respect"}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Negative Climate"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Negative Climate is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Negative climate</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Negative affect" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Negative affect"}}
+            {{> afQuickField name="indicators.1.name" value="Punitive control" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Punitive control"}}
+            {{> afQuickField name="indicators.2.name" value="Teacher negativity" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Teacher negativity"}}
+            {{> afQuickField name="indicators.3.name" value="Child negativity" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Child negativity"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Negative climate</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Negative Affect" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Negative Affect"}}
+            {{> afQuickField name="indicators.1.name" value="Punitive Control" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Punitive Control"}}
+            {{> afQuickField name="indicators.2.name" value="Sarcasm/Disrespect" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Sarcasm/Disrespect"}}
+            {{> afQuickField name="indicators.3.name" value="Severe Negativity" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Severe Negativity"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Teacher Sensitivity"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Teacher Sensitivity</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Awareness and cue detection" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Awareness and cue detection"}}
+            {{> afQuickField name="indicators.1.name" value="Responsiveness" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Responsiveness"}}
+            {{> afQuickField name="indicators.2.name" value="Infant comfort" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Infant comfort"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Teacher Sensitivity</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Awareness" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Awareness"}}
+            {{> afQuickField name="indicators.1.name" value="Responsiveness" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Responsiveness"}}
+            {{> afQuickField name="indicators.2.name" value="Child comfort" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Child comfort"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Teacher Sensitivity</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Awareness" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Awareness"}}
+            {{> afQuickField name="indicators.1.name" value="Responsiveness" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Responsiveness"}}
+            {{> afQuickField name="indicators.2.name" value="Addresses Problems" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Addresses Problems"}}
+            {{> afQuickField name="indicators.3.name" value="Student Comfort" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Student Comfort"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Regard for Child Perspectives"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Regard for Child Perspectives</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Child focus" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Child focus"}}
+            {{> afQuickField name="indicators.1.name" value="Flexibility" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Flexibility"}}
+            {{> afQuickField name="indicators.2.name" value="Support of independence" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Support of independence"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Regard for Child Perspectives is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Regard for Child Perspectives is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Behavior Guidance"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Behavior Guidance</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Proactive" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Proactive"}}
+            {{> afQuickField name="indicators.1.name" value="Supporting positive behavior" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Supporting positive behavior"}}
+            {{> afQuickField name="indicators.2.name" value="Problem behavior" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Problem behavior"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Behavior Guidance is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Behavior Guidance is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Facilitation of Learning and Development"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Facilitation of Learning and Development</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Active facilitation" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Active facilitation"}}
+            {{> afQuickField name="indicators.1.name" value="Expansion of cognition" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Expansion of cognition"}}
+            {{> afQuickField name="indicators.2.name" value="Children's active engagement" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Children's active engagement"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Facilitation of Learning and Development is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Facilitation of Learning and Development is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Regard for Student Perspectives"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Regard for Student Perspectives is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Regard for Student Perspectives is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Regard for Student Perspectives</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Flexibility and Student Focus" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Flexibility and Student Focus"}}
+            {{> afQuickField name="indicators.1.name" value="Support for Autonomy and Leadership" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Support for Autonomy and Leadership"}}
+            {{> afQuickField name="indicators.2.name" value="Student Expression" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Student Expression"}}
+            {{> afQuickField name="indicators.3.name" value="Restriction of Movement" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Restriction of Movement"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Behavior Management"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Behavior Management is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Behavior Management is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Behavior Management</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Clear Behavior Expectations" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Clear Behavior Expectations"}}
+            {{> afQuickField name="indicators.1.name" value="Proactive" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Proactive"}}
+            {{> afQuickField name="indicators.2.name" value="Redirection of Misbehavior" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Redirection of Misbehavior"}}
+            {{> afQuickField name="indicators.3.name" value="Student Behavior" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Student Behavior"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Productivity"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Productivity is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Productivity is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Productivity</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Maximizing Learning Time" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Maximizing Learning Time"}}
+            {{> afQuickField name="indicators.1.name" value="Routines" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Routines"}}
+            {{> afQuickField name="indicators.2.name" value="Transitions" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Transitions"}}
+            {{> afQuickField name="indicators.3.name" value="Preparation" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Preparation"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Instructional Learning Formats"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Instructional Learning Formats is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Instructional Learning Formats is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Instructional Learning Formats</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Effective Facilitation" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Effective Facilitation"}}
+            {{> afQuickField name="indicators.1.name" value="Variety of Modalities and Materials" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Variety of Modalities and Materials"}}
+            {{> afQuickField name="indicators.2.name" value="Student Interest" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Student Interest"}}
+            {{> afQuickField name="indicators.3.name" value="Clarity of Learning Objectives" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Clarity of Learning Objectives"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Concept Development"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Concept Development is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Concept Development is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Concept Development</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Analysis and Reasoning" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Analysis and Reasoning"}}
+            {{> afQuickField name="indicators.1.name" value="Creating" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Creating"}}
+            {{> afQuickField name="indicators.2.name" value="Integration" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Integration"}}
+            {{> afQuickField name="indicators.3.name" value="Connections to the Real World" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Connections to the Real World"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Quality of Feedback"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Quality of Feedback is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Quality of Feedback</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Scaffolding" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Scaffolding"}}
+            {{> afQuickField name="indicators.1.name" value="Providing information" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Providing information"}}
+            {{> afQuickField name="indicators.2.name" value="Encouragement and affirmation" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Encouragement and affirmation"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Quality of Feedback</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Scaffolding" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Scaffolding"}}
+            {{> afQuickField name="indicators.1.name" value="Feedback Loops" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Feedback Loops"}}
+            {{> afQuickField name="indicators.2.name" value="Prompting Thought Processes" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Prompting Thought Processes"}}
+            {{> afQuickField name="indicators.3.name" value="Providing Information" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Providing Information"}}
+            {{> afQuickField name="indicators.4.name" value="Encouragement and Affirmation" type="hidden"}}
+            {{> afQuickField name="indicators.4.score" options="allowed" label="Encouragement and Affirmation"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Language Modeling"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Language Modeling is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Language Modeling</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Supporting language use" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Supporting language use"}}
+            {{> afQuickField name="indicators.1.name" value="Repetition and extension" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Repetition and extension"}}
+            {{> afQuickField name="indicators.2.name" value="Self- and parallel talk" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Self- and parallel talk"}}
+            {{> afQuickField name="indicators.2.name" value="Advanced language" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Advanced language"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Language Modeling</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Frequent Conversations" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Frequent Conversations"}}
+            {{> afQuickField name="indicators.1.name" value="Open-Ended Questions" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Open-Ended Questions"}}
+            {{> afQuickField name="indicators.2.name" value="Repetition and Extension" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Repetition and Extension"}}
+            {{> afQuickField name="indicators.3.name" value="Self- and Parallel Talk" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Self- and Parallel Talk"}}
+            {{> afQuickField name="indicators.4.name" value="Advanced Language" type="hidden"}}
+            {{> afQuickField name="indicators.4.score" options="allowed" label="Advanced Language"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+      <div>
+        <label>What I did</label>
+        <div class="small">
+          <p>Strive to include:</p>
+          <ul>
+            <li>how you set-up and executed a coaching strategy to “activate” the key lever in the classroom</li>
+            <li>teacher actions/demonstrations that indicate how well you transferred knowledge and/or built skill through your coaching session</li>
+          </ul>
+        </div>
+        {{> afQuickField name="activities" label=false}}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          {{> afQuickField name="strategy" options="allowed"}}
+        </div>
+        <div class="col-md-6">
+          {{#if strategySelected "strategy"}}
+            {{#each getStrategies "strategy"}}
+              <label>Time spent using {{this}}</label>
+              {{> afQuickField name=indexName value=this type="hidden"}}
+              {{> afQuickField name=indexTime label=false}}
+            {{/each}}
+          {{/if}}
+        </div>
+      </div>      
+
+      <div>
+        <label>Next Steps</label>
+        <div class="small">
+          <p>Strive to include:</p>
+          <ul>
+            <li>The immediate teacher action you expect the teacher to execute and the child action/demonstration that would indicate the teacher action is working</li>
+            <li>what you observe for next time you visit (considering progress that should be made between visits)</li>
+          </ul>
+        </div>
+        {{> afQuickField name="nextsteps" label=false}}
+      </div>
+ 
+    </fieldset>
+    <button type="submit" class="btn btn-primary js-close-edit">Save</button>
+  {{/autoForm}}
+</template>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- This template is the full page edit form for a Session log -->
+<template name="editSessionlog_form">
+  <h3>Edit Session Log for {{teacher.firstname}} {{teacher.firstname}}</h3>
+  <hr />
+  {{#autoForm collection="Sessionlogs" doc=this id="editSessionlogForm" type="method-update" meteormethod="editSessionlog"}}
+    <fieldset>
+      {{> afQuickField name="teacher._id" label="Teacher" options=myTeachers readonly=true}}
+      {{> afQuickField name="rubric" options="allowed" type="hidden"}}
+      <div class="row">
+        <div class="col-xs-6 formleft">{{> afQuickField name="starttime" type="datetimepicker"}}</div>
+        <div class="col-xs-6 formright">{{> afQuickField name="endtime" type="datetimepicker"}}</div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 formleft">{{> afQuickField name="rubric" options="allowed"}}</div>
+        <div class="col-xs-6 formright">{{> afQuickField name="dimension" options="allowed"}}</div>
+      </div>
+      <h4>{{rubric}} Assessment Dimensions</h4>
+      <div class="row">
+        <div class="col-sm-6 formleft"></div>
+        <div class="col-sm-6 formright"></div>
+      </div>
+      
+      <div>
+        <label>What I Saw</label>
+        <div class="small">
+          <p>Strive to include:</p>
+          <ul>
+            <li>the learning objective for the activity/ies being observed</li>
+            <li>observed child actions/demonstrations that provide evidence of engagement and learning</li>
+            <li>observed teacher actions (or inactions) that influenced observed child actions</li>
+            <li>a key lever you select based on these observations</li>
+          </ul>
+        </div>
+        {{> afQuickField name="observation" label=false}}
+      </div>
+      
+
+      <!-- Indicator fields with a lot of if statements -->
+
+      {{#if afFieldValueIs name="dimension" value="Relational Climate"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Relational Climate</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Relational behaviors" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Relational behaviors"}}
+            {{> afQuickField name="indicators.1.name" value="Emotion expression" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Emotion expression"}}
+            {{> afQuickField name="indicators.2.name" value="Respect for Infants' state" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Respect for Infants' state"}}
+            {{> afQuickField name="indicators.3.name" value="Lack of adult negativity" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Lack of adult negativity"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Relational Climate is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Relational Climate is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Facilitated Exploration"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Facilitated Exploration</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Involvement" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Involvement"}}
+            {{> afQuickField name="indicators.1.name" value="Infant focused" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Infant focused"}}
+            {{> afQuickField name="indicators.2.name" value="Expansion of infants' experience" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Expansion of infants' experience"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Facilitated Exploration is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Facilitated Exploration is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Early Language Support"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Early Language Support</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Teacher talk" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Teacher talk"}}
+            {{> afQuickField name="indicators.1.name" value="Communication support" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Communication support"}}
+            {{> afQuickField name="indicators.2.name" value="Communication extension" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Communication extension"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Early Language Support is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Early Language Support is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Positive Climate"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Positive Climate is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Indicator Scoring for <strong>Positive climate</strong> / <strong>Toddler</strong></div>
+            <div class="panel-body">
+              {{> afQuickField name="indicators.0.name" value="Relationships" type="hidden"}}
+              {{> afQuickField name="indicators.0.score" options="allowed" label="Relationships"}}
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Collapsible Group Item #1
+              </a>
+              <div id="collapseOne" class="collapse" role="infotable" aria-labelledby="headingOne">
+                <table class="table table-responsive">
+                  <thead>
+                    <tr>
+                      <th>Relationships</th>
+                      <th>Low (1,2)</th>
+                      <th>Middle (3,4,5)</th>
+                      <th>High (6,7)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <ul>
+                          <li>Physical proximity</li>
+                          <li>Matched positive affect</li>
+                          <li>Reciprocal interaction</li>
+                          <li>Peer connections</li>
+                        </ul>
+                      </td>
+                      <td>The teacher and children appear distant from and uninterested in one another.</td>
+                      <td>The teacher and some children appear generally interested in one another, but these interactions are not representative of the majority of the children in the classroom. There may be limited peer awareness and interaction.</td>
+                      <td>There are many indications that the teacher and children enjoy warm relationships with one another.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <hr />
+              {{> afQuickField name="indicators.1.name" value="Positive affect" type="hidden"}}
+              {{> afQuickField name="indicators.1.score" options="allowed" label="Positive affect"}}
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Collapsible Group Item #2
+              </a>
+              <div id="collapseTwo" class="collapse" role="infotable" aria-labelledby="headingTwo">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Positive affect</th>
+                      <th>Low (1,2)</th>
+                      <th>Middle (3,4,5)</th>
+                      <th>High (6,7)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <ul>
+                          <li>Smiling, laughter</li>
+                          <li>Enthusiasm</li>
+                          <li>Verbal or physical affection</li>
+                        </ul>
+                      </td>
+                      <td>The teacher and children display flat affect and do not appear to enjoy their time in the classroom.</td>
+                      <td>The teacher and children demonstrate some indications of genuine positive affect; however, these displays may be brief or not characteristic of the majority of the classroom.</td>
+                      <td>There are frequent episodes of smiling and laughter by the teacher and children. On multiple occasions or consistently, the teacher and children show enthusiasm and affection with one another.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <hr />
+              {{> afQuickField name="indicators.2.name" value="Respect" type="hidden"}}
+              {{> afQuickField name="indicators.2.score" options="allowed" label="Respect"}}
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Collapsible Group Item #3
+              </a>
+              <div id="collapseThree" class="collapse" role="infotable" aria-labelledby="headingThree">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Respect</th>
+                      <th>Low (1,2)</th>
+                      <th>Middle (3,4,5)</th>
+                      <th>High (6,7)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <ul>
+                          <li>Warm, calm voice</li>
+                          <li>Respectful language and communication</li>
+                          <li>Eye contact</li>
+                          <li>Body orientation</li>
+                        </ul>
+                      </td>
+                      <td>The teacher rarely, if ever, demonstrates respect for the children.</td>
+                      <td>The teacher sometimes demonstrates respect for the children.</td>
+                      <td>The teacher consistently demonstrates respect for the children</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Indicator Scoring for <strong>Positive climate</strong> / <strong>Pre-K-3</strong></div>
+            <div class="panel-body">
+              {{> afQuickField name="indicators.0.name" value="Relationships" type="hidden"}}
+              {{> afQuickField name="indicators.0.score" options="allowed" label="Relationships"}}
+              {{> afQuickField name="indicators.1.name" value="Positive Affect" type="hidden"}}
+              {{> afQuickField name="indicators.1.score" options="allowed" label="Positive Affect"}}
+              {{> afQuickField name="indicators.2.name" value="Positive Communication" type="hidden"}}
+              {{> afQuickField name="indicators.2.score" options="allowed" label="Positive Communication"}}
+              {{> afQuickField name="indicators.3.name" value="Respect" type="hidden"}}
+              {{> afQuickField name="indicators.3.score" options="allowed" label="Respect"}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Negative Climate"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Negative Climate is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Negative climate</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Negative affect" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Negative affect"}}
+            {{> afQuickField name="indicators.1.name" value="Punitive control" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Punitive control"}}
+            {{> afQuickField name="indicators.2.name" value="Teacher negativity" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Teacher negativity"}}
+            {{> afQuickField name="indicators.3.name" value="Child negativity" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Child negativity"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Negative climate</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Negative Affect" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Negative Affect"}}
+            {{> afQuickField name="indicators.1.name" value="Punitive Control" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Punitive Control"}}
+            {{> afQuickField name="indicators.2.name" value="Sarcasm/Disrespect" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Sarcasm/Disrespect"}}
+            {{> afQuickField name="indicators.3.name" value="Severe Negativity" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Severe Negativity"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Teacher Sensitivity"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Teacher Sensitivity</strong> / <strong>Infant</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Awareness and cue detection" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Awareness and cue detection"}}
+            {{> afQuickField name="indicators.1.name" value="Responsiveness" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Responsiveness"}}
+            {{> afQuickField name="indicators.2.name" value="Infant comfort" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Infant comfort"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Teacher Sensitivity</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Awareness" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Awareness"}}
+            {{> afQuickField name="indicators.1.name" value="Responsiveness" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Responsiveness"}}
+            {{> afQuickField name="indicators.2.name" value="Child comfort" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Child comfort"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Teacher Sensitivity</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Awareness" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Awareness"}}
+            {{> afQuickField name="indicators.1.name" value="Responsiveness" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Responsiveness"}}
+            {{> afQuickField name="indicators.2.name" value="Addresses Problems" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Addresses Problems"}}
+            {{> afQuickField name="indicators.3.name" value="Student Comfort" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Student Comfort"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Regard for Child Perspectives"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Regard for Child Perspectives</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Child focus" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Child focus"}}
+            {{> afQuickField name="indicators.1.name" value="Flexibility" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Flexibility"}}
+            {{> afQuickField name="indicators.2.name" value="Support of independence" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Support of independence"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Regard for Child Perspectives is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Regard for Child Perspectives is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Behavior Guidance"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Behavior Guidance</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Proactive" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Proactive"}}
+            {{> afQuickField name="indicators.1.name" value="Supporting positive behavior" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Supporting positive behavior"}}
+            {{> afQuickField name="indicators.2.name" value="Problem behavior" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Problem behavior"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Behavior Guidance is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Behavior Guidance is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Facilitation of Learning and Development"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Facilitation of Learning and Development</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Active facilitation" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Active facilitation"}}
+            {{> afQuickField name="indicators.1.name" value="Expansion of cognition" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Expansion of cognition"}}
+            {{> afQuickField name="indicators.2.name" value="Children's active engagement" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Children's active engagement"}}
+          </div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Facilitation of Learning and Development is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+            <div class="panel-heading">Facilitation of Learning and Development is not a valid Dimension for a Pre-K-3 CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Regard for Student Perspectives"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Regard for Student Perspectives is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Regard for Student Perspectives is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Regard for Student Perspectives</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Flexibility and Student Focus" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Flexibility and Student Focus"}}
+            {{> afQuickField name="indicators.1.name" value="Support for Autonomy and Leadership" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Support for Autonomy and Leadership"}}
+            {{> afQuickField name="indicators.2.name" value="Student Expression" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Student Expression"}}
+            {{> afQuickField name="indicators.3.name" value="Restriction of Movement" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Restriction of Movement"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Behavior Management"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Behavior Management is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Behavior Management is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Behavior Management</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Clear Behavior Expectations" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Clear Behavior Expectations"}}
+            {{> afQuickField name="indicators.1.name" value="Proactive" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Proactive"}}
+            {{> afQuickField name="indicators.2.name" value="Redirection of Misbehavior" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Redirection of Misbehavior"}}
+            {{> afQuickField name="indicators.3.name" value="Student Behavior" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Student Behavior"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Productivity"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Productivity is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Productivity is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Productivity</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Maximizing Learning Time" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Maximizing Learning Time"}}
+            {{> afQuickField name="indicators.1.name" value="Routines" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Routines"}}
+            {{> afQuickField name="indicators.2.name" value="Transitions" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Transitions"}}
+            {{> afQuickField name="indicators.3.name" value="Preparation" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Preparation"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Instructional Learning Formats"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Instructional Learning Formats is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Instructional Learning Formats is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Instructional Learning Formats</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Effective Facilitation" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Effective Facilitation"}}
+            {{> afQuickField name="indicators.1.name" value="Variety of Modalities and Materials" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Variety of Modalities and Materials"}}
+            {{> afQuickField name="indicators.2.name" value="Student Interest" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Student Interest"}}
+            {{> afQuickField name="indicators.3.name" value="Clarity of Learning Objectives" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Clarity of Learning Objectives"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Concept Development"}}
+        <div class="panel panel-default">
+          {{#if afFieldValueIs name="rubric" value="Infant"}}
+            <div class="panel-heading">Concept Development is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Toddler"}}
+            <div class="panel-heading">Concept Development is not a valid Dimension for a Toddler CLASS Assessment. Please check your above selection.</div>
+          {{/if}}
+          {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Concept Development</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Analysis and Reasoning" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Analysis and Reasoning"}}
+            {{> afQuickField name="indicators.1.name" value="Creating" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Creating"}}
+            {{> afQuickField name="indicators.2.name" value="Integration" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Integration"}}
+            {{> afQuickField name="indicators.3.name" value="Connections to the Real World" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Connections to the Real World"}}
+          </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Quality of Feedback"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Quality of Feedback is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Quality of Feedback</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Scaffolding" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Scaffolding"}}
+            {{> afQuickField name="indicators.1.name" value="Providing information" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Providing information"}}
+            {{> afQuickField name="indicators.2.name" value="Encouragement and affirmation" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Encouragement and affirmation"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Quality of Feedback</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Scaffolding" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Scaffolding"}}
+            {{> afQuickField name="indicators.1.name" value="Feedback Loops" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Feedback Loops"}}
+            {{> afQuickField name="indicators.2.name" value="Prompting Thought Processes" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Prompting Thought Processes"}}
+            {{> afQuickField name="indicators.3.name" value="Providing Information" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Providing Information"}}
+            {{> afQuickField name="indicators.4.name" value="Encouragement and Affirmation" type="hidden"}}
+            {{> afQuickField name="indicators.4.score" options="allowed" label="Encouragement and Affirmation"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if afFieldValueIs name="dimension" value="Language Modeling"}}
+        <div class="panel panel-default">
+        {{#if afFieldValueIs name="rubric" value="Infant"}}
+          <div class="panel-heading">Language Modeling is not a valid Dimension for an Infant CLASS Assessment. Please check your above selection.</div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Toddler"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Language Modeling</strong> / <strong>Toddler</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Supporting language use" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Supporting language use"}}
+            {{> afQuickField name="indicators.1.name" value="Repetition and extension" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Repetition and extension"}}
+            {{> afQuickField name="indicators.2.name" value="Self- and parallel talk" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Self- and parallel talk"}}
+            {{> afQuickField name="indicators.2.name" value="Advanced language" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Advanced language"}}
+          </div>
+        {{/if}}
+        {{#if afFieldValueIs name="rubric" value="Pre-K-3"}}
+          <div class="panel-heading">Indicator Scoring for <strong>Language Modeling</strong> / <strong>Pre-K-3</strong></div>
+          <div class="panel-body">
+            {{> afQuickField name="indicators.0.name" value="Frequent Conversations" type="hidden"}}
+            {{> afQuickField name="indicators.0.score" options="allowed" label="Frequent Conversations"}}
+            {{> afQuickField name="indicators.1.name" value="Open-Ended Questions" type="hidden"}}
+            {{> afQuickField name="indicators.1.score" options="allowed" label="Open-Ended Questions"}}
+            {{> afQuickField name="indicators.2.name" value="Repetition and Extension" type="hidden"}}
+            {{> afQuickField name="indicators.2.score" options="allowed" label="Repetition and Extension"}}
+            {{> afQuickField name="indicators.3.name" value="Self- and Parallel Talk" type="hidden"}}
+            {{> afQuickField name="indicators.3.score" options="allowed" label="Self- and Parallel Talk"}}
+            {{> afQuickField name="indicators.4.name" value="Advanced Language" type="hidden"}}
+            {{> afQuickField name="indicators.4.score" options="allowed" label="Advanced Language"}}
+          </div>
+        {{/if}}
+        </div>
+      {{/if}}
+      <div>
+        <label>What I did</label>
+        <div class="small">
+          <p>Strive to include:</p>
+          <ul>
+            <li>how you set-up and executed a coaching strategy to “activate” the key lever in the classroom</li>
+            <li>teacher actions/demonstrations that indicate how well you transferred knowledge and/or built skill through your coaching session</li>
+          </ul>
+        </div>
+        {{> afQuickField name="activities" label=false}}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          {{> afQuickField name="strategy" options="allowed"}}
+        </div>
+        <div class="col-md-6">
+          {{#if strategySelected "strategy"}}
+            {{#each getStrategies "strategy"}}
+              <label>Time spent using {{this}}</label>
+              {{> afQuickField name=indexName value=this type="hidden"}}
+              {{> afQuickField name=indexTime label=false}}
+            {{/each}}
+          {{/if}}
+        </div>
+      </div>    
+
+      <div>
+        <label>Next Steps</label>
+        <div class="small">
+          <p>Strive to include:</p>
+          <ul>
+            <li>The immediate teacher action you expect the teacher to execute and the child action/demonstration that would indicate the teacher action is working</li>
+            <li>what you observe for next time you visit (considering progress that should be made between visits)</li>
+          </ul>
+        </div>
+        {{> afQuickField name="nextsteps" label=false}}
+      </div>
+ 
+    </fieldset>
+    <button type="submit" class="btn btn-primary js-close-edit">Save</button>
+  {{/autoForm}}
+</template>
