@@ -13,10 +13,13 @@
 <template name="classlog">
 
   <h3>
+    <!-- getting rid of confusing button for now
     <a href="/class" class="btn btn-default">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </a>
-    &nbsp;{{teacher.firstname}} {{teacher.lastname}}
+    &nbsp;
+    -->
+    <a href="/teacher/{{teacher._id}}">{{teacher.firstname}} {{teacher.lastname}}</a>
     {{> editClasslogButton}}
   </h3>
   <hr />

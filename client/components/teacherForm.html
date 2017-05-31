@@ -51,10 +51,13 @@
 
 <template name="teacher">
     <h3>
+      <!-- Turn off the semi useless back button
       <a href="/teachers" class="btn btn-default">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
       </a>
-      &nbsp; {{firstname}} {{lastname}}
+      &nbsp; 
+      -->
+      {{firstname}} {{lastname}}
       {{> editTeacherButton}}
     </h3>
     <hr />
@@ -70,7 +73,7 @@
       <div class="col-md-4">Assigned Coach: {{coach.firstname}} {{coach.lastname}}</div>
     </div>
     <hr />
-
+  {{> classlogsSummary}}
   {{> sessionlogList}}
 
 </template>
@@ -161,7 +164,7 @@
       {{> afQuickField name="lastname"}}
       {{> afQuickField name="position"}}
       {{> afQuickField name="cohort"}}
-      {{> afQuickField name="emails"}}
+      {{> afQuickField Grossmaname="emails"}}
       {{> afQuickField name="school._id" label="School" options=schoolList}}
       {{> afQuickField name="coach._id" label="Assigned Coach" options=coachList}}
       {{> afQuickField name="status" options="allowed"}}

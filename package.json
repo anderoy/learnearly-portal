@@ -7,6 +7,7 @@
   "dependencies": {
     "babel-runtime": "^6.18.0",
     "bcrypt": "^0.8.7",
+    "chart.js": "^2.6.0",
     "meteor-node-stubs": "~0.2.0",
     "moment": "^2.14.1",
     "pikaday-time": "^1.4.1"

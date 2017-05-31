@@ -60,22 +60,3 @@ Template.editSessionlog_form.helpers({
     return nameValue;
   },
 });
-
-Template.sessionlogList.helpers({
-  session: function () {
-    return Sessionlogs.find({
-      'teacher._id': this._id
-    }, {
-      sort: { starttime: -1 }
-    });
-  },
-  makehref: function (data) {
-    return "#"+data;
-  }
-});
-
-Template.sessionlogList.events({
-  'click .js-add-session':function(event){
-    Session.set("teachid", this._id);
-  },
-});

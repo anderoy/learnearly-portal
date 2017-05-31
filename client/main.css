@@ -15,6 +15,10 @@
 }
 */
 
+.emptyChart {
+  height: 0px;
+}
+
 img.e3brand {
   position: relative;
   height: 30px;

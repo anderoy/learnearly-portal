@@ -1,0 +1,79 @@
+<!-- This template is the Session log information template for the teacher view-->
+<template name="sessionlogList">
+  <h4>
+    Coaching Session Log
+    <span class="pull-right"><a class="btn btn-sm btn-info add-new js-add-session" href="/sessionlog/add">Add Session Log</a></span>
+  </h4>
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  {{#each session}}
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="SessionLogHeader">
+        <h4 class="panel-title">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href={{makehref _id}} aria-expanded="true" aria-controls="Collapse">
+            {{formatShortDateTime starttime}} &ndash; {{formatEndTime endtime}}
+            <span class="pull-right">{{dimension}}</span>
+          </a>
+        </h4>
+      </div>
+      <div id={{_id}} class="panel-collapse collapse" role="tabpanel" aria-labelledby="SessionLogInfo">
+        <div class="panel-body">
+          <div class="row">
+            <div class="text-right">
+              <a class="btn" href="/sessionlog/edit/{{_id}}"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+            </div>
+            <div class="col-md-7 formleft"><p><strong>What I saw</strong></p><p>{{observation}}</p></div>
+            <div class="col-md-5 formright">
+              {{#each indicators}}
+                <p><strong>{{name}}: </strong>{{score}}</p>
+              {{/each}}
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-md-7 formleft"><p><strong>What I did</strong></p><p>{{activities}}</p></div>
+            <div class="col-md-5 formright">
+              {{#each strategies}}
+                <p><strong>{{name}}: </strong>{{time}} min.</p>
+              {{/each}}
+            </div>
+          </div>
+          <hr />
+          <p><strong>Next Steps:</strong></p>
+          <p>{{nextsteps}}</p>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+  </div>
+</template>
+
+<template name="classlogsSummary">
+  <h4>
+    Core CLASS Components
+  </h4>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>ILF</th>
+        <th>QF</th>
+        <th>CD</th>
+        <th>LM</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each classlog}}
+      <tr id={{_id}}>
+        <th scope="row">{{formatShortDate starttime}}</th>
+        <td>{{dimscore "Instructional Learning Formats"}}</td>
+        <td>{{dimscore "Quality of Feedback"}}</td>
+        <td>{{dimscore "Concept Development"}}</td>
+        <td>{{dimscore "Language Modeling"}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div id="chartId" ref={{_id}}>
+    <canvas id="myChart" class="emptyChart"></canvas>
+  </div>
+</template>

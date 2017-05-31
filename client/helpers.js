@@ -8,6 +8,10 @@ Template.registerHelper('formatShortDateTime', ( val ) => {
   return moment(val).format('MM/DD/YY, h:mm a');
 });
 
+Template.registerHelper('formatShortDate', ( val ) => {
+  return moment(val).format('MM/DD/YY');
+});
+
 Template.registerHelper('formatEndTime', ( val ) => {
   return moment(val).format('h:mm a');
 });
