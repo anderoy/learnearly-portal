@@ -89,7 +89,16 @@ Template.classlogsSummary.events({
         },
 
         // Configuration options go here
-        options: {}
+        options: {
+          scales: {
+            xAxes: [{
+                ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: 7
+                }
+            }]
+          }
+        }
     });
   }
 });
